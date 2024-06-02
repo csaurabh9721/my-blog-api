@@ -29,6 +29,7 @@ public class UserController {
             ApiResponse<List<UserModel>> response = new ApiResponse<>(404, null, "Entity not found");
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body(response);
         }
+
     } catch (Exception ex) {
         ApiResponse<List<UserModel>> response = new ApiResponse<>(501, null, ex.toString());
         return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(response);
