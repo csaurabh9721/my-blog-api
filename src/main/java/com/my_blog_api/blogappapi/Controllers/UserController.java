@@ -3,6 +3,7 @@ package com.my_blog_api.blogappapi.Controllers;
 import com.my_blog_api.blogappapi.Models.ApiResponse;
 import com.my_blog_api.blogappapi.Models.UserModel;
 import com.my_blog_api.blogappapi.Service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,7 +49,7 @@ public class UserController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ApiResponse<UserModel>> addUser(@RequestBody UserModel userModel) {
+    public ResponseEntity<ApiResponse<UserModel>> addUser(@Valid @RequestBody UserModel userModel) {
         try {
             UserModel entity = userService.addUser(userModel);
             if (entity != null) {
@@ -64,7 +65,7 @@ public class UserController {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<UserModel>> updateUser(@RequestBody UserModel userModel, @PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<UserModel>> updateUser(@Valid @RequestBody UserModel userModel, @PathVariable Integer id) {
         try {
             UserModel entity = userService.updateUser(userModel,id);
             if (entity != null) {
