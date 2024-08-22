@@ -32,16 +32,18 @@ public class PostService implements PostsInterface {
     private ModelMapper modelMapper;
 
     @Override
-    public PostDTO createPost(PostDTO postDTO, Integer userid, Integer categoryId) {
-        User user = this.userRepository.findById(userid).orElseThrow(() -> new UserNotFoundException("User not found with id "+ userid));
-        Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new UserNotFoundException("Category not found with id "+ categoryId));
-        Posts post = this.modelMapper.map(postDTO, Posts.class);
+    public PostDTO createPost(PostDTO postDTO) {
+        User user = this.userRepository.findById(postDTO.getUserId()).orElseThrow(() -> new UserNotFoundException("User not found with id "+ postDTO.getUserId()));
+        Category category = this.categoryRepository.findById(postDTO.getCategoryId()).orElseThrow(() -> new UserNotFoundException("Category not found with id "+ postDTO.getCategoryId()));
+       // Posts post = this.modelMapper.map(postDTO, Posts.class);
+       Posts post = new Posts();
+       post.setTitle(postDTO.getTitle());
+       post.setContent(postDTO.getContent());
         post.setImage("default.png");
         post.setUser(user);
         post.setCategory(category);
         post.setPostDate(new Date());
         Posts savedPost = this.postRepository.save(post);
-
         return this.modelMapper.map(savedPost, PostDTO.class);
     }
 

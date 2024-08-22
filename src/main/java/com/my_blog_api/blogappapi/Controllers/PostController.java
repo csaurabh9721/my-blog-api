@@ -19,10 +19,10 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/create_post/user/{userId}/category/{categoryId}")
-    ResponseEntity<ApiResponse<PostDTO>> createPost(@Valid @RequestBody PostDTO postDTO, @PathVariable Integer userId, @PathVariable Integer categoryId) {
+    @PostMapping("/create_post")
+    ResponseEntity<ApiResponse<PostDTO>> createPost(@Valid @RequestBody PostDTO postDTO) {
         try {
-            PostDTO data = this.postService.createPost(postDTO, userId, categoryId);
+            PostDTO data = this.postService.createPost(postDTO);
 
             if (data != null) {
                 ApiResponse<PostDTO> response = new ApiResponse<PostDTO>(200, data, "Post Created");

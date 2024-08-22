@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface PostsInterface {
 
-    PostDTO createPost(PostDTO postDTO,Integer userId,Integer categoryId);
+    PostDTO createPost(PostDTO postDTO);
 
     Posts updatePost(PostDTO postDTO, Integer postId);
 
