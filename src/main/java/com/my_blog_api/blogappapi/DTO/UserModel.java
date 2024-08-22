@@ -1,4 +1,4 @@
-package com.my_blog_api.blogappapi.Models;
+package com.my_blog_api.blogappapi.DTO;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;

@@ -1,15 +1,14 @@
 package com.my_blog_api.blogappapi.Controllers;
-
-import com.my_blog_api.blogappapi.Models.ApiResponse;
-import com.my_blog_api.blogappapi.Models.CategoryDto;
+import com.my_blog_api.blogappapi.DTO.ApiResponse;
+import com.my_blog_api.blogappapi.DTO.CategoryDto;
 import com.my_blog_api.blogappapi.Service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
 
 @RestController
 @RequestMapping("api/category")

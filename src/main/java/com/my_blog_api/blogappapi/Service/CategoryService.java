@@ -3,7 +3,7 @@ package com.my_blog_api.blogappapi.Service;
 import com.my_blog_api.blogappapi.Entities.Category;
 import com.my_blog_api.blogappapi.Exaptions.UserNotFoundException;
 import com.my_blog_api.blogappapi.Interface.CategoryInterface;
-import com.my_blog_api.blogappapi.Models.CategoryDto;
+import com.my_blog_api.blogappapi.DTO.CategoryDto;
 import com.my_blog_api.blogappapi.Repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class CategoryService implements CategoryInterface {
 
     @Override
     public CategoryDto updateCategory(CategoryDto categoryDto, Integer id) {
-        Category category = this.categoryRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Category", "id", id.toString()));
+        Category category = this.categoryRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Category not found with id "+ id.toString()));
 
         if (category != null) {
             category.setTitle(categoryDto.getTitle());
@@ -52,7 +52,7 @@ public class CategoryService implements CategoryInterface {
 
     @Override
     public CategoryDto getCategoryById(Integer id) {
-        Category category = this.categoryRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Category", "id", id.toString()));
+        Category category = this.categoryRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Category not found with id "+ id));
         if (category != null) {
             return entityToDto(category);
         } else {
@@ -62,7 +62,7 @@ public class CategoryService implements CategoryInterface {
 
     @Override
     public boolean deleteCategoryById(Integer id) {
-        Category category = this.categoryRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Category", "id", id.toString()));
+        Category category = this.categoryRepository.findById(id).orElseThrow(() -> new UserNotFoundException("Category not found with id "+ id));
         if (category != null) {
             this.categoryRepository.deleteById(id);
             return true;

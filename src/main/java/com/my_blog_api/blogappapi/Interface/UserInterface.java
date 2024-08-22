@@ -1,5 +1,5 @@
 package com.my_blog_api.blogappapi.Interface;
-import com.my_blog_api.blogappapi.Models.UserModel;
+import com.my_blog_api.blogappapi.DTO.UserModel;
 import java.util.List;
 
 

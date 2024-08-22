@@ -1,7 +1,7 @@
 package com.my_blog_api.blogappapi.Controllers;
 
-import com.my_blog_api.blogappapi.Models.ApiResponse;
-import com.my_blog_api.blogappapi.Models.UserModel;
+import com.my_blog_api.blogappapi.DTO.ApiResponse;
+import com.my_blog_api.blogappapi.DTO.UserModel;
 import com.my_blog_api.blogappapi.Service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
