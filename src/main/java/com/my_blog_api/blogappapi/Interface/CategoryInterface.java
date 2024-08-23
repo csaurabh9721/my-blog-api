@@ -1,5 +1,5 @@
 package com.my_blog_api.blogappapi.Interface;
-import com.my_blog_api.blogappapi.Models.CategoryDto;
+import com.my_blog_api.blogappapi.DTO.CategoryDto;
 import java.util.List;
 
 public interface CategoryInterface {

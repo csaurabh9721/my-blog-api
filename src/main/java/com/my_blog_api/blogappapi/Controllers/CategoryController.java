@@ -1,15 +1,14 @@
 package com.my_blog_api.blogappapi.Controllers;
-
-import com.my_blog_api.blogappapi.Models.ApiResponse;
-import com.my_blog_api.blogappapi.Models.CategoryDto;
+import com.my_blog_api.blogappapi.DTO.ApiResponse;
+import com.my_blog_api.blogappapi.DTO.CategoryDto;
 import com.my_blog_api.blogappapi.Service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
+
 
 @RestController
 @RequestMapping("api/category")
@@ -19,7 +18,7 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @GetMapping("/")
-    public ResponseEntity<ApiResponse<List<CategoryDto>>> getAllUser() {
+    public ResponseEntity<ApiResponse<List<CategoryDto>>> getAllCategory() {
         try{
             List<CategoryDto> entity = categoryService.getAllCategory();
             if (entity != null) {
@@ -37,7 +36,7 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<CategoryDto>> getUserById(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<CategoryDto>> getCategoryById(@PathVariable Integer id) {
         try{
             CategoryDto entity = categoryService.getCategoryById(id);
             ApiResponse<CategoryDto> response = new ApiResponse<>(200, entity, "Success");
@@ -50,7 +49,7 @@ public class CategoryController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<ApiResponse<CategoryDto>> addUser(@Valid @RequestBody CategoryDto categoryDto) {
+    public ResponseEntity<ApiResponse<CategoryDto>> addCategory(@Valid @RequestBody CategoryDto categoryDto) {
         try {
             CategoryDto entity = categoryService.addCategory(categoryDto);
             if (entity != null) {
@@ -66,7 +65,7 @@ public class CategoryController {
         }
     }
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<CategoryDto>> updateUser(@Valid @RequestBody CategoryDto categoryDto, @PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<CategoryDto>> updateCategory (@Valid @RequestBody CategoryDto categoryDto, @PathVariable Integer id) {
         try {
             CategoryDto entity = categoryService.updateCategory(categoryDto,id);
             if (entity != null) {
@@ -83,7 +82,7 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Boolean>> deleteUser(@PathVariable Integer id) {
+    public ResponseEntity<ApiResponse<Boolean>> deleteCategory(@PathVariable Integer id) {
         try {
             boolean entity = categoryService.deleteCategoryById(id);
             ApiResponse<Boolean> response = new ApiResponse<>(200, entity, "Category deleted successfully");

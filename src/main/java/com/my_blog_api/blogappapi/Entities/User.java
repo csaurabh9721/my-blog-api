@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -27,4 +30,7 @@ public class User {
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT true")
     private Boolean isActive;
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private List<Posts> posts = new ArrayList<>();
 }

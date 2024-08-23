@@ -3,7 +3,7 @@ package com.my_blog_api.blogappapi.Service;
 import com.my_blog_api.blogappapi.Entities.User;
 import com.my_blog_api.blogappapi.Exaptions.UserNotFoundException;
 import com.my_blog_api.blogappapi.Interface.UserInterface;
-import com.my_blog_api.blogappapi.Models.UserModel;
+import com.my_blog_api.blogappapi.DTO.UserModel;
 import com.my_blog_api.blogappapi.Repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class UserService implements UserInterface {
 
     @Override
     public UserModel updateUser(UserModel userModel, Integer id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User", "id", id.toString()));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id "+ id));
         if (user != null) {
             user.setUserName(userModel.getUserName());
             user.setEmail(userModel.getEmail());
@@ -54,7 +54,7 @@ public class UserService implements UserInterface {
 
     @Override
     public UserModel getUserById(Integer id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User", "id", id.toString()));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id "+ id));
         if (user != null) {
             return userToDto(user);
         } else {
@@ -64,7 +64,7 @@ public class UserService implements UserInterface {
 
     @Override
     public boolean deleteUserById(Integer id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User", "id", id.toString()));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id "+ id));
         if (user != null) {
             this.userRepository.deleteById(id);
             return true;
