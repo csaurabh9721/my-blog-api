@@ -11,13 +11,14 @@ public interface PostsInterface {
 
     PostDTO createPost(PostDTO postDTO);
 
-    Posts updatePost(PostDTO postDTO, Integer postId);
+    PostDTO updatePost(PostDTO postDTO, Integer postId);
 
-    void deletePost(Integer postId);
+    boolean deletePost(Integer postId);
 
-    List<Posts> getAllPost();
+    List<PostDTO> getAllPost();
+    List<PostDTO> getPostWithPagination(Integer size, Integer page);
 
-    Posts getPostById(Integer postId);
+    PostDTO getPostById(Integer postId);
 
     List<PostDTO> getAllPostByUser(Integer userId);
 
