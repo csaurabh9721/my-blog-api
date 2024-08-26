@@ -2,6 +2,7 @@ package com.my_blog_api.blogappapi.Controllers;
 
 import com.my_blog_api.blogappapi.DTO.ApiResponse;
 import com.my_blog_api.blogappapi.DTO.PostDTO;
+import com.my_blog_api.blogappapi.Response.PaginationPostResponse;
 import com.my_blog_api.blogappapi.Service.PostService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,20 +94,20 @@ public class PostController {
     }
 
     @GetMapping("/getByPage")
-    public ResponseEntity<ApiResponse<List<PostDTO>>> getAllPost(  @RequestParam(value = "page", required = true) int page,
-                                                                   @RequestParam(value = "size", required = true) int size) {
+    public ResponseEntity<ApiResponse<PaginationPostResponse>> getAllPost(@RequestParam(value = "page", required = true) int page,
+                                                                          @RequestParam(value = "size", required = true) int size) {
         try {
-            List<PostDTO> data = this.postService.getPostWithPagination(size,page);
+            PaginationPostResponse data = this.postService.getPostWithPagination(size,page);
 
             if (data != null) {
-                ApiResponse<List<PostDTO>> response = new ApiResponse<>(200, data, "Fetch successfully");
+                ApiResponse<PaginationPostResponse> response = new ApiResponse<>(200, data, "Fetch successfully");
                 return ResponseEntity.status(HttpStatus.OK).body(response);
             } else {
-                ApiResponse<List<PostDTO>> response = new ApiResponse<>(400, null, "Bad Request");
+                ApiResponse<PaginationPostResponse> response = new ApiResponse<>(400, null, "Bad Request");
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
             }
         } catch (Exception e) {
-            ApiResponse<List<PostDTO>> response = new ApiResponse<>(500, null, e.toString());
+            ApiResponse<PaginationPostResponse> response = new ApiResponse<>(500, null, e.toString());
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(response);
         }
     }
@@ -141,6 +142,23 @@ public class PostController {
             }
         } catch (Exception e) {
             ApiResponse<PostDTO> response = new ApiResponse<>(500, null, e.toString());
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(response);
+        }
+    }
+
+    @GetMapping("/searchPost")
+    public ResponseEntity<ApiResponse<List<PostDTO>>> searchPost(@RequestParam(value = "keyword") String keyword) {
+        try {
+            List<PostDTO> data = this.postService.searchPost(keyword);
+            if (data != null) {
+                ApiResponse<List<PostDTO>> response = new ApiResponse<>(200, data, "Fetch successfully");
+                return ResponseEntity.status(HttpStatus.OK).body(response);
+            } else {
+                ApiResponse<List<PostDTO>> response = new ApiResponse<>(400, null, "Bad Request");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            }
+        } catch (Exception e) {
+            ApiResponse<List<PostDTO>> response = new ApiResponse<>(500, null, e.toString());
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(response);
         }
     }

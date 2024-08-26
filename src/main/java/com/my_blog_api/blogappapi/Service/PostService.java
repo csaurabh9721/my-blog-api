@@ -9,6 +9,7 @@ import com.my_blog_api.blogappapi.Interface.PostsInterface;
 import com.my_blog_api.blogappapi.Repository.CategoryRepository;
 import com.my_blog_api.blogappapi.Repository.PostRepository;
 import com.my_blog_api.blogappapi.Repository.UserRepository;
+import com.my_blog_api.blogappapi.Response.PaginationPostResponse;
 import jakarta.persistence.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,11 +76,19 @@ public class PostService implements PostsInterface {
     }
 
     @Override
-    public List<PostDTO> getPostWithPagination(Integer size, Integer page) {
+    public PaginationPostResponse getPostWithPagination(Integer size, Integer page) {
         Pageable pageable = PageRequest.of(page,size);
             Page<Posts> postsPage = postRepository.findAll(pageable);
-            List<Posts> posts = postsPage.getContent();
-            return posts.stream().map((post) -> this.modelMapper.map(post, PostDTO.class)).toList();
+            List<PostDTO> postDTOS = postsPage.getContent().stream().map((post) -> this.modelMapper.map(post, PostDTO.class)).toList();
+        PaginationPostResponse pR = new  PaginationPostResponse();
+        pR.setPosts(postDTOS);
+        pR.setPageNumber(postsPage.getNumber());
+        pR.setSize(postsPage.getSize());
+        pR.setTotalElements(postsPage.getTotalElements());
+        pR.setTotalPage(postsPage.getTotalPages());
+        pR.setLastPage(postsPage.isLast());
+        return  pR;
+
     }
 
 
@@ -105,7 +114,8 @@ public class PostService implements PostsInterface {
 
     @Override
     public List<PostDTO> searchPost(String search) {
-        return List.of();
+        List<Posts>  posts =  this.postRepository.findByTitleContaining(search);
+        return posts.stream().map((post -> this.modelMapper.map(post, PostDTO.class))).toList();
     }
 
 }
