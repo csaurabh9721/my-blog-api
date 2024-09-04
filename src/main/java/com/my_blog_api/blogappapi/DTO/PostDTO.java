@@ -6,13 +6,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
 public class PostDTO {
 
     private Integer id;
-
     @NotNull
     private String title;
     @NotNull
@@ -23,4 +25,6 @@ public class PostDTO {
     private int categoryId;
     @NotNull
     private int userId;
+    private List<CommentsDto> comments;
+
 }

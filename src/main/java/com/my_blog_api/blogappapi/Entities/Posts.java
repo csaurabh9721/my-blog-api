@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -35,4 +37,7 @@ public class Posts {
     @ManyToOne
     @JoinColumn(name = "userId")
     private User user;
+
+    @OneToMany(mappedBy = "posts",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    private Set<Comments> comments= new HashSet<>();
 }
