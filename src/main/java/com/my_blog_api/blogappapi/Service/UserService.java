@@ -1,10 +1,12 @@
 package com.my_blog_api.blogappapi.Service;
 
+import com.my_blog_api.blogappapi.DTO.LoginDto;
 import com.my_blog_api.blogappapi.Entities.User;
 import com.my_blog_api.blogappapi.Exaptions.UserNotFoundException;
 import com.my_blog_api.blogappapi.Interface.UserInterface;
 import com.my_blog_api.blogappapi.DTO.UserModel;
 import com.my_blog_api.blogappapi.Repository.UserRepository;
+import com.my_blog_api.blogappapi.Response.LoginResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,19 @@ public class UserService implements UserInterface {
     @Autowired
     private ModelMapper modelMapper;
 
+    @Override
+    public LoginResponse onLogin(LoginDto loginDto) {
+        User user = userRepository.findByEmail(loginDto.getEmail());
+        if (user != null) {
+            if (loginDto.getPassword().equals(user.getPassword())) {
+                return userToLoginResponse(user, "working on");
+            } else {
+                return null;
+            }
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public UserModel addUser(UserModel userModel) {
@@ -32,7 +47,7 @@ public class UserService implements UserInterface {
 
     @Override
     public UserModel updateUser(UserModel userModel, Integer id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id "+ id));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
         if (user != null) {
             user.setUserName(userModel.getUserName());
             user.setEmail(userModel.getEmail());
@@ -54,7 +69,7 @@ public class UserService implements UserInterface {
 
     @Override
     public UserModel getUserById(Integer id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id "+ id));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
         if (user != null) {
             return userToDto(user);
         } else {
@@ -64,7 +79,7 @@ public class UserService implements UserInterface {
 
     @Override
     public boolean deleteUserById(Integer id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id "+ id));
+        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
         if (user != null) {
             this.userRepository.deleteById(id);
             return true;
@@ -80,5 +95,17 @@ public class UserService implements UserInterface {
 
     private UserModel userToDto(User user) {
         return this.modelMapper.map(user, UserModel.class);
+    }
+
+    private LoginResponse userToLoginResponse(User user, String token) {
+        LoginResponse response = new LoginResponse();
+        response.setId(user.getId());
+        response.setUserName(user.getUserName());
+        response.setEmail(user.getEmail());
+        response.setPassword(user.getPassword());
+        response.setAbout(user.getAbout());
+        response.setIsActive(user.getIsActive());
+        response.setAccessToken(token);
+        return response;
     }
 }
