@@ -101,7 +101,6 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(response);
         }
     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Boolean>> deleteUser(@PathVariable Integer id) {
         try {
