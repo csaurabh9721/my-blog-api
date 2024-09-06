@@ -1,15 +1,13 @@
-package com.my_blog_api.blogappapi.Security;
-
-import com.my_blog_api.blogappapi.Security.JWTSecurity.JWTAuthEntryPoint;
-import com.my_blog_api.blogappapi.Security.JWTSecurity.JWTAuthFilter;
-import com.my_blog_api.blogappapi.Service.UserDetailsServiceImpl;
+package com.my_blog_api.blogappapi.Config.Security;
+import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthEntryPoint;
+import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthFilter;
+import com.my_blog_api.blogappapi.Imples.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,18 +22,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     @Autowired
     JWTAuthFilter jwtAuthFilter;
-
+    @Autowired
+    private JWTAuthEntryPoint point;
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsServiceImpl();
     }
-
-    @Autowired
-    private JWTAuthEntryPoint point;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -43,7 +37,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests((authorize) -> authorize
                         .requestMatchers("/api/user/**").permitAll()
                         .anyRequest().authenticated()
-                ).exceptionHandling(ex -> ex.authenticationEntryPoint(point))
+                )
+                .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
@@ -61,7 +56,6 @@ public class SecurityConfig {
         authenticationProvider.setUserDetailsService(userDetailsService());
         authenticationProvider.setPasswordEncoder(passwordEncoder());
         return authenticationProvider;
-
     }
 
     @Bean

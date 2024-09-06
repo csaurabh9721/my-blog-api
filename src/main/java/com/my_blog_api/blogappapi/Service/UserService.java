@@ -1,26 +1,23 @@
 package com.my_blog_api.blogappapi.Service;
 
+import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthHelper;
 import com.my_blog_api.blogappapi.DTO.LoginDto;
+import com.my_blog_api.blogappapi.DTO.UserModel;
 import com.my_blog_api.blogappapi.Entities.User;
 import com.my_blog_api.blogappapi.Exaptions.UserNotFoundException;
 import com.my_blog_api.blogappapi.Interface.UserInterface;
-import com.my_blog_api.blogappapi.DTO.UserModel;
 import com.my_blog_api.blogappapi.Repository.UserRepository;
 import com.my_blog_api.blogappapi.Response.LoginResponse;
-import com.my_blog_api.blogappapi.Security.JWTSecurity.JWTAuthHelper;
 import org.modelmapper.ModelMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -45,18 +42,14 @@ public class UserService implements UserInterface {
     @Autowired
     private JWTAuthHelper helper;
 
-    private Logger logger = LoggerFactory.getLogger(UserService.class);
-
-
     @Override
     public LoginResponse onLogin(LoginDto loginDto) {
-        User user = userRepository.findByEmail(loginDto.getEmail());
-        if (user != null) {
-            if (loginDto.getPassword().equals(user.getPassword())) {
-               // this.doAuthenticate(loginDto.getEmail(), loginDto.getPassword());
-              //  UserDetails userDetails = userDetailsService.loadUserByUsername(loginDto.getEmail());
-               // String token = this.helper.generateToken(userDetails);
-                return userToLoginResponse(user, "");
+        Authentication authentication = this.manager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
+        if (authentication.isAuthenticated()) {
+            User user = userRepository.findByEmail(loginDto.getEmail());
+            if (user != null) {
+                    String token = helper.GenerateToken(loginDto.getEmail());
+                    return userToLoginResponse(user, token);
             } else {
                 return null;
             }
@@ -78,9 +71,10 @@ public class UserService implements UserInterface {
     public UserModel updateUser(UserModel userModel, Integer id) {
         User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
         if (user != null) {
+            String encodedPassword = passwordEncoder.encode(userModel.getPassword());
             user.setUserName(userModel.getUserName());
             user.setEmail(userModel.getEmail());
-            user.setPassword(userModel.getPassword());
+            user.setPassword(encodedPassword);
             user.setAbout(userModel.getAbout());
             user.setIsActive(userModel.getIsActive() == null || userModel.getIsActive());
             User updatedUser = this.userRepository.save(user);

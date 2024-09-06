@@ -1,4 +1,6 @@
-package com.my_blog_api.blogappapi.Security.JWTSecurity;
+package com.my_blog_api.blogappapi.Config.Security.JWTSecurity;
+
+import com.my_blog_api.blogappapi.Config.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -15,8 +17,6 @@ import java.util.function.Function;
 
 @Component
 public class JWTAuthHelper {
-
-    public static final String SECRET = "357638792F423F4428472B4B6250655368566D597133743677397A2443264629";
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -49,14 +49,10 @@ public class JWTAuthHelper {
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
-
-
-    public String GenerateToken(String username){
+    public String GenerateToken(String username) {
         Map<String, Object> claims = new HashMap<>();
         return createToken(claims, username);
     }
-
-
 
     private String createToken(Map<String, Object> claims, String username) {
 
@@ -64,12 +60,12 @@ public class JWTAuthHelper {
                 .setClaims(claims)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis()+ 1000 * 60 * 60))
+                .setExpiration(new Date(System.currentTimeMillis() + Constants.JWT_TOKEN_VALIDITY))
                 .signWith(getSignKey(), SignatureAlgorithm.HS256).compact();
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
+        byte[] keyBytes = Decoders.BASE64.decode(Constants.SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

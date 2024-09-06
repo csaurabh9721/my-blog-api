@@ -1,7 +1,8 @@
-package com.my_blog_api.blogappapi.Service;
+package com.my_blog_api.blogappapi.Imples;
 
 import com.my_blog_api.blogappapi.Entities.User;
 import com.my_blog_api.blogappapi.Repository.UserRepository;
+import com.my_blog_api.blogappapi.Service.CustomUserDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-
         logger.debug("Entering in loadUserByUsername Method...");
         User user = userRepository.findByEmail(username);
         if(user == null){
