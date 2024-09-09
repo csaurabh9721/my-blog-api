@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -17,7 +16,8 @@ public class BlogAppApiApplication implements CommandLineRunner {
     private RoleRepo roleRepo;
 
     public static void main(String[] args) {
-        ApplicationContext context = SpringApplication.run(BlogAppApiApplication.class, args);
+         SpringApplication.run(BlogAppApiApplication.class, args);
+        //ApplicationContext context = SpringApplication.run(BlogAppApiApplication.class, args);
     }
 
     @Bean
@@ -26,7 +26,7 @@ public class BlogAppApiApplication implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         try {
             Role role1 = new Role();
             role1.setId(1);

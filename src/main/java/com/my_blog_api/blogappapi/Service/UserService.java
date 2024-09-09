@@ -2,7 +2,6 @@ package com.my_blog_api.blogappapi.Service;
 
 import com.my_blog_api.blogappapi.Config.Constants;
 import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthHelper;
-import com.my_blog_api.blogappapi.DTO.ApiResponse;
 import com.my_blog_api.blogappapi.DTO.LoginDto;
 import com.my_blog_api.blogappapi.DTO.UserModel;
 import com.my_blog_api.blogappapi.Entities.Role;
@@ -14,8 +13,6 @@ import com.my_blog_api.blogappapi.Repository.UserRepository;
 import com.my_blog_api.blogappapi.Response.LoginResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
