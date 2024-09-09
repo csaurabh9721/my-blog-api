@@ -1,4 +1,5 @@
 package com.my_blog_api.blogappapi.Response;
+import com.my_blog_api.blogappapi.Entities.Role;
 import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,4 +17,5 @@ public class LoginResponse {
     private String about;
     private Boolean isActive;
     private String accessToken;
+    private Role role;
 }

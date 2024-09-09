@@ -10,6 +10,9 @@ public interface UserInterface {
 
 
     LoginResponse onLogin(LoginDto loginDto);
+
+    UserModel register(UserModel userModel);
+
     UserModel addUser(UserModel userModel);
 
     UserModel updateUser(UserModel userModel, Integer id);

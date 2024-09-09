@@ -1,4 +1,5 @@
 package com.my_blog_api.blogappapi.Config.Security;
+
 import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthEntryPoint;
 import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthFilter;
 import com.my_blog_api.blogappapi.Imples.UserDetailsServiceImpl;
@@ -9,6 +10,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -21,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
     @Autowired
     JWTAuthFilter jwtAuthFilter;
@@ -35,7 +38,10 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/user/**").permitAll()
+                        .requestMatchers("/api/category/**").permitAll()
+                        .requestMatchers("/api/user/login").permitAll()
+                        .requestMatchers("/api/user/register").permitAll()
+                        .requestMatchers("/api/user/addUser").permitAll()
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(point))
@@ -63,3 +69,5 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
+
+

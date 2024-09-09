@@ -1,23 +1,28 @@
 package com.my_blog_api.blogappapi.Service;
 
+import com.my_blog_api.blogappapi.Config.Constants;
 import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthHelper;
+import com.my_blog_api.blogappapi.DTO.ApiResponse;
 import com.my_blog_api.blogappapi.DTO.LoginDto;
 import com.my_blog_api.blogappapi.DTO.UserModel;
+import com.my_blog_api.blogappapi.Entities.Role;
 import com.my_blog_api.blogappapi.Entities.User;
 import com.my_blog_api.blogappapi.Exaptions.UserNotFoundException;
 import com.my_blog_api.blogappapi.Interface.UserInterface;
+import com.my_blog_api.blogappapi.Repository.RoleRepo;
 import com.my_blog_api.blogappapi.Repository.UserRepository;
 import com.my_blog_api.blogappapi.Response.LoginResponse;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ExceptionHandler;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,17 +33,14 @@ public class UserService implements UserInterface {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private RoleRepo roleRepo;
     @Autowired
     private ModelMapper modelMapper;
-
     @Autowired
     private UserDetailsService userDetailsService;
-
     @Autowired
     private AuthenticationManager manager;
-
-
     @Autowired
     private JWTAuthHelper helper;
 
@@ -48,8 +50,8 @@ public class UserService implements UserInterface {
         if (authentication.isAuthenticated()) {
             User user = userRepository.findByEmail(loginDto.getEmail());
             if (user != null) {
-                    String token = helper.GenerateToken(loginDto.getEmail());
-                    return userToLoginResponse(user, token);
+                String token = helper.GenerateToken(loginDto.getEmail());
+                return userToLoginResponse(user, token);
             } else {
                 return null;
             }
@@ -59,9 +61,18 @@ public class UserService implements UserInterface {
     }
 
     @Override
+    public UserModel register(UserModel userModel) {
+        User user = dtoToUser(userModel);
+        String encodedPassword = this.passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+        Role role = this.roleRepo.findById(Constants.NORMAL_USER).get();
+        user.setRole(role);
+        User newUser = this.userRepository.save(user);
+        return userToDto(newUser);
+    }
+
+    @Override
     public UserModel addUser(UserModel userModel) {
-        String encodedPassword = passwordEncoder.encode(userModel.getPassword());
-        userModel.setPassword(encodedPassword);
         User user = dtoToUser(userModel);
         User savedUser = this.userRepository.save(user);
         return userToDto(savedUser);
@@ -100,17 +111,13 @@ public class UserService implements UserInterface {
         }
     }
 
+
     @Override
     public boolean deleteUserById(Integer id) {
-        User user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
-        if (user != null) {
-            this.userRepository.deleteById(id);
-            return true;
-        } else {
-            return false;
-        }
+         this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found with id " + id));
+        this.userRepository.deleteById(id);
+        return true;
     }
-
 
     private User dtoToUser(UserModel userModel) {
         return this.modelMapper.map(userModel, User.class);
@@ -129,20 +136,7 @@ public class UserService implements UserInterface {
         response.setAbout(user.getAbout());
         response.setIsActive(user.getIsActive());
         response.setAccessToken(token);
+        response.setRole(user.getRole());
         return response;
-    }
-
-    private void doAuthenticate(String email, String password) {
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
-        try {
-            manager.authenticate(authentication);
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
-        }
-    }
-
-    @ExceptionHandler(BadCredentialsException.class)
-    public String exceptionHandler() {
-        return "Credentials Invalid !!";
     }
 }

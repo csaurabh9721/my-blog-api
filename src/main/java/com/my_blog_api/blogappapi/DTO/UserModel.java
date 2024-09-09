@@ -1,5 +1,6 @@
 package com.my_blog_api.blogappapi.DTO;
 
+import com.my_blog_api.blogappapi.Entities.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -30,4 +31,6 @@ public class UserModel {
     private String about;
 
     private Boolean isActive;
+
+    private Role role;
 }
