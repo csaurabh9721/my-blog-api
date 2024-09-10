@@ -1,5 +1,4 @@
 package com.my_blog_api.blogappapi.Config.Security;
-
 import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthEntryPoint;
 import com.my_blog_api.blogappapi.Config.Security.JWTSecurity.JWTAuthFilter;
 import com.my_blog_api.blogappapi.Imples.UserDetailsServiceImpl;
@@ -38,6 +37,7 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html", "/v3/api-docs").permitAll()
                         .requestMatchers("/api/category/**").permitAll()
                         .requestMatchers("/api/user/login").permitAll()
                         .requestMatchers("/api/user/register").permitAll()
